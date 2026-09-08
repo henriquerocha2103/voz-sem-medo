@@ -1,0 +1,83 @@
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de registros</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+        <div class="overlay-consentimento" id="overlay-login">
+        <div class="card-consentimento">
+            <h3>Acesso restrito</h3>
+            <p>Esta página é exclusiva da direção da escola. Digite a senha para continuar.</p>
+
+            <label>
+                <input type="password" id="senha-painel" placeholder="Senha">
+            </label>
+
+            <p class="erro-login" id="erro-login" style="display: none;">Senha incorreta. Tente novamente.</p>
+
+            <div class="botoes-card">
+                <button type="button" id="btn-entrar-painel" class="btn-confirmar">Entrar</button>
+            </div>
+        </div>
+    </div>
+    <header>
+        <h1>Painel de denúncias</h1>
+        <p>Visão geral dos relatos recebidos pela direção da escola.</p>
+    </header>
+
+    <main class="painel" id="conteudo-painel" style="display: none;">
+
+        <div class="resumo">
+            <div class="card-resumo">
+                <span class="numero" id="total-mes">0</span>
+                <span class="rotulo">denúncias este mês</span>
+            </div>
+            <div class="card-resumo">
+                <span class="numero" id="total-filtrado">0</span>
+                <span class="rotulo">resultados encontrados</span>
+            </div>
+        </div>
+
+        <div class="filtros">
+            <h3>Filtrar por tipo</h3>
+            <div class="opcoes" id="filtro-tipo">
+                <button type="button" class="opcao-filtro ativo" data-tipo="todos">Todos</button>
+                <button type="button" class="opcao-filtro" data-tipo="bullying">Bullying</button>
+                <button type="button" class="opcao-filtro" data-tipo="agressao">Agressão</button>
+                <button type="button" class="opcao-filtro" data-tipo="apelidos/xingos">Apelidos/Ofensas</button>
+                <button type="button" class="opcao-filtro" data-tipo="exclusao">Exclusão</button>
+                <button type="button" class="opcao-filtro" data-tipo="cyberbullying">Cyberbullying</button>
+                <button type="button" class="opcao-filtro" data-tipo="outro">Outro</button>
+            </div>
+
+            <h3>Filtrar por data</h3>
+            <div class="filtro-data">
+                <label>
+                    De
+                    <input type="date" id="data-inicio">
+                </label>
+                <label>
+                    Até
+                    <input type="date" id="data-fim">
+                </label>
+                <button type="button" id="limpar-filtros">Limpar filtros</button>
+            </div>
+        </div>
+
+        <div class="lista-denuncias" id="lista-denuncias">
+            <!-- os cards de denúncia são gerados aqui via JS -->
+        </div>
+
+        <p class="vazio" id="mensagem-vazio" style="display: none;">
+            Nenhuma denúncia encontrada com esses filtros.
+        </p>
+
+    </main>
+
+<script src="login-painel.js"></script>
+<script src="denuncias.js"></script>
+</body>
+</html>

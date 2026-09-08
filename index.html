@@ -1,0 +1,121 @@
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voz sem medo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="denuncias.html" class="link-painel">Ver painel de denúncias</a>
+    <header>
+        <h1>
+            Aqui você pode relatar o que está acontecendo<br>
+            de maneira anonima
+        </h1>
+        <p>
+            A direção da escola recebe sua mensagem diretamente,
+            sem login nem identificação.
+        </p>
+    </header>
+
+    <main class="formulario">
+        <h2>O que te aconteceu?</h2>
+
+        <div class="opcoes">
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="bullying">
+                <span>Bullying</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="agressao">
+                <span>Agressão</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="apelidos/xingos">
+                <span>Apelidos/Ofensas</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="exclusao">
+                <span>Exclusão</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="cyberbullying">
+                <span>Cyberbullying</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="ocorrencia" value="outro">
+                <span>Outro</span>
+            </label>
+
+        </div>
+
+        <h3>Conte com suas palavras</h3>
+
+        <label>
+            <textarea placeholder="Nos conte com suas palavras..."></textarea>
+        </label>
+        <h5>Quanto mais detalhes melhor.</h5>
+
+        <h3>Turma do aluno que praticou</h3>
+
+        <label>
+            <input
+                type="text"
+                name="serie"
+                placeholder="Exemplo 3b...">
+        </label>
+        <button type="submit">Enviar registro</button>
+    </main>
+
+    <div class="overlay-consentimento" id="overlay-consentimento" style="display: none;">
+        <div class="card-consentimento">
+            <h3>Antes de enviar</h3>
+            <p>
+                Este relato será enviado diretamente para a direção da escola,
+                sem identificação, login ou qualquer dado que permita rastrear
+                quem enviou.
+            </p>
+            <p>
+                As informações registradas aqui serão usadas exclusivamente
+                pela equipe escolar para entender a situação relatada e decidir
+                os próximos passos de acompanhamento. Elas não serão
+                compartilhadas publicamente, nem repassadas a terceiros fora
+                da escola.
+            </p>
+            <p>
+                Se em algum momento você quiser se identificar para receber um
+                retorno, isso poderá ser feito depois, por outro canal — este
+                formulário continuará anônimo.
+            </p>
+    
+            <label class="check-termos">
+                <input type="checkbox" id="aceite-termos">
+                Li e entendi como minhas informações serão usadas.
+            </label>
+    
+            <div class="botoes-card">
+                <button type="button" id="btn-cancelar-consentimento" class="btn-cancelar">Cancelar</button>
+                <button type="button" id="btn-confirmar-consentimento" class="btn-confirmar" disabled>Confirmar e enviar</button>
+            </div>
+        </div>
+    </div>
+    <div class="overlay-consentimento" id="overlay-confirmacao" style="display: none;">
+        <div class="card-consentimento">
+            <h3>Registro enviado</h3>
+            <p>Sua mensagem chegou até a direção da escola. Obrigado por falar sobre isso.</p>
+            <div class="botoes-card">
+                <button type="button" id="btn-fechar-confirmacao">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
