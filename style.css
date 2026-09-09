@@ -397,3 +397,15 @@ textarea {
     margin-top: 10px;
     font-family: 'Nunito', sans-serif;
 }
+
+.opcao2{
+    padding: 6px 15px;
+    border: 2px solid #dcecf2;
+    border-radius: 20px;
+    background: rgb(243, 242, 242);
+    color: black;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    transition: 0.2s;
+}

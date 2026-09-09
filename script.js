@@ -24,6 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const turmaSelecionada = document.querySelector('input[name="turma"]:checked');
+
+        if (!turmaSelecionada) {
+            alert('Por favor, selecione o periodo da ocorrência.');
+            return;
+        }
+
         overlayConsentimento.style.display = 'flex';
     });
 
@@ -57,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             id: Date.now(),
             tipo: ocorrencia,
             relato: relato,
-            turma: serie,
+            turma: turma,
             data: new Date().toISOString()
         };
 
