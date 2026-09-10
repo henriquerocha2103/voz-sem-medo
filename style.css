@@ -409,3 +409,9 @@ textarea {
     font-size: 14px;
     transition: 0.2s;
 }
+
+.periodo-denuncia {
+    font-size: 13px;
+    color: #6b8290;
+    margin: 4px 0;
+}

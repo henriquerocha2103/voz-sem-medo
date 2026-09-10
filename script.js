@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const ocorrenciaSelecionada = document.querySelector('input[name="ocorrencia"]:checked');
+        const periodosSelecionados = document.querySelectorAll('input[name="periodo"]:checked');
 
         if (!ocorrenciaSelecionada) {
             alert('Por favor, selecione o tipo de ocorrência.');
@@ -23,11 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Por favor, conte com suas palavras o que aconteceu.');
             return;
         }
-
-        const turmaSelecionada = document.querySelector('input[name="turma"]:checked');
-
-        if (!turmaSelecionada) {
-            alert('Por favor, selecione o periodo da ocorrência.');
+        if (periodosSelecionados.length === 0) {
+            alert('Por favor, selecione quando a situação aconteceu.');
             return;
         }
 
@@ -57,14 +55,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function enviarRegistro() {
         const ocorrencia = document.querySelector('input[name="ocorrencia"]:checked').value;
+        const periodos = Array.from(document.querySelectorAll('input[name="periodo"]:checked'))
+            .map(input => input.value);
         const relato = textarea.value.trim();
         const serie = inputSerie.value.trim();
 
         const registro = {
             id: Date.now(),
             tipo: ocorrencia,
+            periodos: periodos,
             relato: relato,
-            turma: turma,
+            turma: serie,
             data: new Date().toISOString()
         };
 
@@ -90,6 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function limparFormulario() {
         document.querySelectorAll('input[name="ocorrencia"]').forEach(radio => {
             radio.checked = false;
+        });
+        document.querySelectorAll('input[name="periodo"]').forEach(checkbox => {
+            checkbox.checked = false;
         });
         textarea.value = '';
         inputSerie.value = '';

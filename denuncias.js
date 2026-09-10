@@ -9,16 +9,25 @@ document.addEventListener('DOMContentLoaded', () => {
         outro: 'Outro'
     };
 
+    const rotulosPeriodo = {
+        manha: 'Manhã',
+        tarde: 'Tarde',
+        noite: 'Noite',
+        recreio: 'Recreio'
+    };
+
     const listaEl = document.getElementById('lista-denuncias');
     const totalMesEl = document.getElementById('total-mes');
     const totalFiltradoEl = document.getElementById('total-filtrado');
     const mensagemVaziaEl = document.getElementById('mensagem-vazio');
-    const botoesFiltroTipo = document.querySelectorAll('.opcao-filtro');
+    const botoesFiltroTipo = document.querySelectorAll('#filtro-tipo .opcao-filtro');
+    const botoesFiltroPeriodo = document.querySelectorAll('#filtro-periodo .opcao-filtro');
     const inputDataInicio = document.getElementById('data-inicio');
     const inputDataFim = document.getElementById('data-fim');
     const btnLimparFiltros = document.getElementById('limpar-filtros');
 
     let tipoAtivo = 'todos';
+    let periodoAtivo = 'todos';
 
     function carregarDenuncias() {
         return JSON.parse(localStorage.getItem('denuncias') || '[]');
@@ -35,6 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function formatarPeriodos(periodos) {
+        if (!periodos || periodos.length === 0) return '—';
+        return periodos.map(p => rotulosPeriodo[p] || p).join(', ');
+    }
+
     function contarDenunciasDoMesAtual(denuncias) {
         const agora = new Date();
         return denuncias.filter(d => {
@@ -48,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return denuncias.filter(d => {
             if (tipoAtivo !== 'todos' && d.tipo !== tipoAtivo) {
                 return false;
+            }
+
+            if (periodoAtivo !== 'todos') {
+                const periodosDenuncia = d.periodos || [];
+                if (!periodosDenuncia.includes(periodoAtivo)) {
+                    return false;
+                }
             }
 
             const dataDenuncia = new Date(d.data);
@@ -74,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="badge-tipo">${rotulosTipo[denuncia.tipo] || denuncia.tipo}</span>
                 <span class="data-denuncia">${formatarData(denuncia.data)}</span>
             </div>
+            <p class="periodo-denuncia">Período: ${formatarPeriodos(denuncia.periodos)}</p>
             <p class="relato-denuncia">${denuncia.relato}</p>
             ${denuncia.turma ? `<p class="turma-denuncia">Turma: ${denuncia.turma}</p>` : ''}
         `;
@@ -107,15 +129,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    botoesFiltroPeriodo.forEach(botao => {
+        botao.addEventListener('click', () => {
+            botoesFiltroPeriodo.forEach(b => b.classList.remove('ativo'));
+            botao.classList.add('ativo');
+            periodoAtivo = botao.dataset.periodo;
+            renderizar();
+        });
+    });
+
     inputDataInicio.addEventListener('change', renderizar);
     inputDataFim.addEventListener('change', renderizar);
 
     btnLimparFiltros.addEventListener('click', () => {
         inputDataInicio.value = '';
         inputDataFim.value = '';
+
         tipoAtivo = 'todos';
         botoesFiltroTipo.forEach(b => b.classList.remove('ativo'));
-        document.querySelector('.opcao-filtro[data-tipo="todos"]').classList.add('ativo');
+        document.querySelector('#filtro-tipo .opcao-filtro[data-tipo="todos"]').classList.add('ativo');
+
+        periodoAtivo = 'todos';
+        botoesFiltroPeriodo.forEach(b => b.classList.remove('ativo'));
+        document.querySelector('#filtro-periodo .opcao-filtro[data-periodo="todos"]').classList.add('ativo');
+
         renderizar();
     });
 
