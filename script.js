@@ -1,3 +1,6 @@
+import { db } from "./firebase-config.js";
+import { collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const botaoEnviar = document.querySelector('button[type="submit"]');
     const textarea = document.querySelector('textarea');
@@ -42,18 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
         btnConfirmar.disabled = true;
     });
 
-    btnConfirmar.addEventListener('click', () => {
-        enviarRegistro();
+    btnConfirmar.addEventListener('click', async () => {
+        btnConfirmar.disabled = true;
+        btnConfirmar.textContent = 'Enviando...';
+
+        await enviarRegistro();
+
         overlayConsentimento.style.display = 'none';
         checkboxTermos.checked = false;
-        btnConfirmar.disabled = true;
+        btnConfirmar.textContent = 'Confirmar e enviar';
     });
 
     btnFechar.addEventListener('click', () => {
         overlayConfirmacao.style.display = 'none';
     });
 
-    function enviarRegistro() {
+    async function enviarRegistro() {
         const ocorrencia = document.querySelector('input[name="ocorrencia"]:checked').value;
         const periodos = Array.from(document.querySelectorAll('input[name="periodo"]:checked'))
             .map(input => input.value);
@@ -61,31 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const serie = inputSerie.value.trim();
 
         const registro = {
-            id: Date.now(),
             tipo: ocorrencia,
             periodos: periodos,
             relato: relato,
             turma: serie,
-            data: new Date().toISOString()
+            data: Timestamp.now()
         };
 
-        // Aqui entra a chamada real pro backend no futuro, por ex:
-        // fetch('/api/registros', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(registro)
-        // });
-
-        salvarDenuncia(registro);
-
-        overlayConfirmacao.style.display = 'flex';
-        limparFormulario();
-    }
-
-    function salvarDenuncia(registro) {
-        const denuncias = JSON.parse(localStorage.getItem('denuncias') || '[]');
-        denuncias.push(registro);
-        localStorage.setItem('denuncias', JSON.stringify(denuncias));
+        try {
+            await addDoc(collection(db, "registros"), registro);
+            overlayConfirmacao.style.display = 'flex';
+            limparFormulario();
+        } catch (erro) {
+            console.error("Erro ao enviar denúncia:", erro);
+            alert('Não foi possível enviar o registro. Tente novamente em instantes.');
+        }
     }
 
     function limparFormulario() {

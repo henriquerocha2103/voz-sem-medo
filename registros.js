@@ -1,3 +1,6 @@
+import { db } from "./firebase-config.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const rotulosTipo = {
@@ -28,9 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tipoAtivo = 'todos';
     let periodoAtivo = 'todos';
+    let todasDenunciasCache = [];
 
-    function carregarDenuncias() {
-        return JSON.parse(localStorage.getItem('denuncias') || '[]');
+    async function carregarDenuncias() {
+        const snapshot = await getDocs(collection(db, "registros"));
+        return snapshot.docs.map(doc => {
+            const dados = doc.data();
+            return {
+                id: doc.id,
+                ...dados,
+                data: dados.data.toDate().toISOString() // converte Timestamp do Firebase para string ISO
+            };
+        });
     }
 
     function formatarData(isoString) {
@@ -102,12 +114,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     }
 
-    function renderizar() {
-        const todasDenuncias = carregarDenuncias();
-        const filtradas = aplicarFiltros(todasDenuncias)
+    function renderizarLista() {
+        const filtradas = aplicarFiltros(todasDenunciasCache)
             .sort((a, b) => new Date(b.data) - new Date(a.data));
 
-        totalMesEl.textContent = contarDenunciasDoMesAtual(todasDenuncias);
+        totalMesEl.textContent = contarDenunciasDoMesAtual(todasDenunciasCache);
         totalFiltradoEl.textContent = filtradas.length;
 
         listaEl.innerHTML = '';
@@ -120,12 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function renderizar() {
+        listaEl.innerHTML = '<p class="vazio">Carregando denúncias...</p>';
+        todasDenunciasCache = await carregarDenuncias();
+        renderizarLista();
+    }
+
     botoesFiltroTipo.forEach(botao => {
         botao.addEventListener('click', () => {
             botoesFiltroTipo.forEach(b => b.classList.remove('ativo'));
             botao.classList.add('ativo');
             tipoAtivo = botao.dataset.tipo;
-            renderizar();
+            renderizarLista();
         });
     });
 
@@ -134,12 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
             botoesFiltroPeriodo.forEach(b => b.classList.remove('ativo'));
             botao.classList.add('ativo');
             periodoAtivo = botao.dataset.periodo;
-            renderizar();
+            renderizarLista();
         });
     });
 
-    inputDataInicio.addEventListener('change', renderizar);
-    inputDataFim.addEventListener('change', renderizar);
+    inputDataInicio.addEventListener('change', renderizarLista);
+    inputDataFim.addEventListener('change', renderizarLista);
 
     btnLimparFiltros.addEventListener('click', () => {
         inputDataInicio.value = '';
@@ -153,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         botoesFiltroPeriodo.forEach(b => b.classList.remove('ativo'));
         document.querySelector('#filtro-periodo .opcao-filtro[data-periodo="todos"]').classList.add('ativo');
 
-        renderizar();
+        renderizarLista();
     });
 
     renderizar();
